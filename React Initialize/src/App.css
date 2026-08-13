@@ -1,0 +1,112 @@
+h1{
+  text-align: center;
+  color: black;
+}
+nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin: 5px;
+  background-color: aquamarine;
+  color: black;
+  border-radius: 8px;
+}
+ul{
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+li{
+  padding: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+li:hover{
+  background-color: blueviolet;
+  color: white;
+}
+.btns{
+  display: flex;
+  gap: 10px;
+}
+button{
+  background-color:darkorchid;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+}
+img{
+  width: 300px;
+  height: 250px;
+  margin: 10px;
+  border-radius: 15px;
+  border: 2px solid white;
+  transition: ease-in-out 0.3s;
+}
+img:hover{
+  box-shadow: 0px 0px 10px 5px rgb(255, 255, 255);
+}
+.card{
+  border: 2px solid white;
+  border-radius: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin: 20px;
+  padding: 20px;
+  gap: 20px;
+}
+.card-box{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 15px;
+  border: 2px solid white;
+}
+.card-content{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 10px;
+}
+.btnns{
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  flex-grow: 1;
+}
+.content{
+  height: 500px;
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.content-img{
+  width: 400px;
+  height: 400px;
+  margin: 20px;
+}
+.content-text{
+  display: flex;
+  flex-direction: column;
+}
+.hero-headng{
+  text-align: left;
+  color: white;
+}
+.content-p{
+  text-align: left;
+}
+
+footer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
