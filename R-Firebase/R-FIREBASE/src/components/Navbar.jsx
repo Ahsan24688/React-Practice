@@ -8,12 +8,12 @@ const Navbar = () => {
     <div>
       <nav className='flex justify-between items-center m-2 p-4 rounded-2xl border-2 bg-indigo-300'>
         <h1>Logo</h1>
-        <ul className='flex gap-4'>
+        <ul className='flex gap-4 justify-center items-center'>
             <li>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/" className={'bg-amber-200 p-3 rounded-2xl'}>Home</NavLink>
             </li>
             <li>
-                <NavLink to="/Products">Products</NavLink>
+                <NavLink to="/Products" className={'bg-amber-200 p-3 rounded-2xl hover:bg-amber-300'}>Products</NavLink>
             </li>
         </ul>
       </nav>

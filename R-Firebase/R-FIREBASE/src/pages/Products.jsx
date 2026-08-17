@@ -1,41 +1,18 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { collection, addDoc, db, getDocs, doc } from "../database/firebaseconfig";
+import { collection, addDoc, db, getDocs, doc, updateDoc, deleteDoc } from "../database/firebaseconfig";
 import axios from 'axios';
 import Itemcard from '../components/Itemcard';
 import Skeleton from '../components/Skeleton';
+import Addprodmodal from '../components/Addprodmodal';
 
 const Products = () => {
-    let [products, setProducts] = useState("");
-    let [description, setDescription] = useState("");
-    let [price, setPrice] = useState("");
-    let [img, setImg] = useState("");
+    let [openmodal, setOpenmodal] = useState(false);
     let [getdata, setGetdata] = useState([]);
     let [loading, setLoading] = useState(false);
+    let [editid, setEditid] = useState("");
 
-    let addproducts = async () => {
-        try {
-
-            const cloudinary_image = await axios.post("https://api.cloudinary.com/v1_1/uypx9ksr/image/upload", {
-                file: img,
-                upload_preset: "ml_default"
-            })
-            let image = cloudinary_image.data.url
-            console.log("Successfully get image", image);
-
-
-            const docRef = await addDoc(collection(db, "products"), {
-                producttitle: products,
-                Description: description,
-                Price: price,
-                imageurl: image
-            });
-            console.log("Document written with ID: ", docRef.id);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
+    
 
 
     let getProducts = async () => {
@@ -57,60 +34,76 @@ const Products = () => {
         setLoading(false);
     }
 
+    let editdata = async (id) => {
+        console.log(id);
+        
+        let currentdata = getdata.find((data) => data.id == id)
+        if(currentdata){
+            setEditid(currentdata);
+            setOpenmodal(true);
+        
+        }
+    }
+
+    let deleteproduct = async (id) => {
+        try {
+            await deleteDoc(doc(db, "products", id));
+            await getProducts();
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         // addproducts();
         getProducts();
     }, []);
 
+
     return (
         <>
-            <div className='flex flex-wrap border-2 bg-amber-300 rounded-2xl m-2 p-2'>
-                <input type="text" placeholder='Add Product' className='border-2 rounded-2xl m-2 p-2 bg-white cursor-pointer'
-                    onChange={(e) => { setProducts(e.target.value) }} />
-                <input type="text" placeholder='Add Description' className='border-2 rounded-2xl m-2 p-2 bg-white cursor-pointer'
-                    onChange={(e) => { setDescription(e.target.value) }} />
-                <input type="text" placeholder='Add Price' className='border-2 rounded-2xl m-2 p-2 bg-white cursor-pointer'
-                    onChange={(e) => { setPrice(e.target.value) }} />
-                <input type="file" placeholder='Add Image' className='border-2 rounded-2xl m-2 p-2 bg-white cursor-pointer'
-                    onChange={(e) => {
-                        let file = e.target.files[0];
-                        let reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onloadend = () => {
-                            setImg(reader.result);
-                        }
-                    }} />
-                <button className='border-2 rounded-2xl m-2 px-4 bg-indigo-300 hover:bg-indigo-500' onClick={addproducts}>Add</button>
+            <div className='flex justify-between items-center m-2 p-4 rounded-2xl border-2 bg-indigo-300'>
+                <h1>Products</h1>
+                <button onClick={() => setOpenmodal(true)} className='p-2 bg-amber-200 hover:bg-amber-300 rounded-2xl shadow-md'>+ Add Product</button>
             </div>
             {
+                (openmodal) && (<Addprodmodal
+                    close={() => setOpenmodal(false)}
+                    refresh={getProducts}
+                    editdata={editid} />)
+            }
+            {
                 (loading) ?
-                <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2 bg-indigo-500'>
-                    {[...Array(3)].map((index) => (
-                        <Skeleton key={index} />
-                    ))}
+                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2 bg-indigo-500'>
+                        {[...Array(3)].map((index) => (
+                            <Skeleton key={index} />
+                        ))}
 
-                </div>
-                :
-                <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2  bg-indigo-500'>
-                    {
-                        (getdata.length > 0) && (
-                            getdata.map((data, index) => {
-                                return (
-                                    <div key={index}>
-                                        <Itemcard
-                                            id={data.id}
-                                            producttitle={data.producttitle}
-                                            Description={data.Description}
-                                            Price={data.Price}
-                                            imageurl={data.imageurl}
-                                        />
-                                    </div>
-                                )
+                    </div>
+                    :
+                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2  bg-indigo-500'>
+                        {
+                            (getdata.length > 0) && (
+                                getdata.map((data, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <Itemcard
+                                                id={data.id}
+                                                producttitle={data.producttitle}
+                                                Description={data.Description}
+                                                Price={data.Price}
+                                                imageurl={data.imageurl}
+                                                onEdit={editdata}
+                                                deleteproduct={deleteproduct}
+                                            />
+                                        </div>
+                                    )
 
-                            }))
+                                }))
 
-                    }
-                </div>
+                        }
+                    </div>
             }
         </>
     )
