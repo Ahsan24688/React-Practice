@@ -63,8 +63,11 @@ const Products = () => {
 
     return (
         <>
-            <div className='flex justify-between items-center m-2 p-4 rounded-2xl border-2 bg-indigo-300'>
-                <h1>Products</h1>
+            <div className='flex justify-between items-center m-2 p-4 rounded-2xl bg-[#F77171]'>
+                <div>
+                <h1 className='text-2xl font-bold'>Products</h1>
+                <p className='text-black font-bold'> Explore our wide range of products</p>
+                </div>
                 <button onClick={() => setOpenmodal(true)} className='p-2 bg-amber-200 hover:bg-amber-300 rounded-2xl shadow-md'>+ Add Product</button>
             </div>
             {
@@ -75,14 +78,17 @@ const Products = () => {
             }
             {
                 (loading) ?
-                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2 bg-indigo-500'>
-                        {[...Array(3)].map((index) => (
+                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2 bg-[#FECD76]'>
+                        {[...Array(2)].map((index) => (
                             <Skeleton key={index} />
                         ))}
 
                     </div>
                     :
-                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2  bg-indigo-500'>
+                    <div className='flex flex-wrap justify-center items-center rounded-2xl m-2 p-2  bg-[#FECD76]'>
+                        <div className='flex justify-start items-center w-full'>
+                            <input type="text" placeholder='Search Products' className=' m-2 rounded-2xl bg-white p-2' />
+                        </div>
                         {
                             (getdata.length > 0) && (
                                 getdata.map((data, index) => {
