@@ -2,10 +2,41 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router'
 import img from '../image/storepic.png'
+import { auth, deleteDoc, signOut, deleteUser,doc,db } from '../database/firebaseconfig'
+import { useNavigate } from 'react-router'
 
 const Landing = () => {
+  let nevigate = useNavigate();
+  let usersignout = async () => {
+    try{
+      await signOut(auth);
+      console.log("User signed out successfully");
+      nevigate("/Login");
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+  let deleteaccount = async () =>{
+    try{
+      const user = auth.currentUser;
+      if(user){
+        const uid = user.uid;
+        await deleteDoc(doc(db, "credentials", uid));
+        await deleteUser(user);
+        console.log("User deleted successfully");
+        nevigate("/");
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
   return (
     <>
+      <Navbar Signout={usersignout} Delete={deleteaccount}/>
       <div className='bg-indigo-500 rounded-2xl m-4 p-10 flex justify-between'>
         <div className='flex flex-col gap-4 justify-start  m-8 w-1/2'>
           <h1 className='text-2xl text-white font-bold'>Welcome to Urban Unique Store 🛍️</h1>

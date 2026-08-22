@@ -5,6 +5,7 @@ import axios from 'axios';
 import Itemcard from '../components/Itemcard';
 import Skeleton from '../components/Skeleton';
 import Addprodmodal from '../components/Addprodmodal';
+import Navbar from '../components/Navbar';
 
 const Products = () => {
     let [openmodal, setOpenmodal] = useState(false);
@@ -63,6 +64,7 @@ const Products = () => {
 
     return (
         <>
+        <Navbar />
             <div className='flex justify-between items-center m-2 p-4 rounded-2xl bg-[#F77171]'>
                 <div>
                 <h1 className='text-2xl font-bold'>Products</h1>
