@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { auth, createUserWithEmailAndPassword } from "../../../database/firebaseconfig";
-import { collection, addDoc, db } from "../../../database/firebaseconfig";
+import { collection, addDoc, db, doc, } from "../../../database/firebaseconfig";
 import { useNavigate } from 'react-router';
 
 const Register = () => {
@@ -13,7 +13,7 @@ const Register = () => {
   let schema = yup.object({
     name: yup.string().required(),
     email: yup.string().required("Email is required").email(),
-    password: yup.string().required().matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/ ,"Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character."),
+    password: yup.string().required().matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character."),
   })
 
   let {
@@ -34,14 +34,14 @@ const Register = () => {
   let userRegister = async (usersdata) => {
     try {
       let { name, email, password } = usersdata;
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-        })
+      let userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user;
+      console.log(user);
+
       await adddata({
         name: name,
-        email: email
+        email: email,
+        uid: user.uid
       })
       nevigate("/Landing");
     }
@@ -76,7 +76,7 @@ const Register = () => {
           type="text" id="name" placeholder='Enter Your Name' className='p-2 m-2 rounded-2xl bg-white'
         />
 
-            <p className='text-red-600'>{errors.name?.message}</p>
+        <p className='text-red-600'>{errors.name?.message}</p>
 
 
 
@@ -84,14 +84,14 @@ const Register = () => {
         <input {...register("email", { required: true })}
           type="email" id="email" placeholder='Enter Your Email' className='p-2 m-2 rounded-2xl bg-white' />
 
-            <p className='text-red-600'>{errors.email?.message}</p>
+        <p className='text-red-600'>{errors.email?.message}</p>
 
 
         <label htmlFor="password" className='font-bold'>Password</label>
         <input {...register("password", { required: true })}
           type="password" id="password" placeholder='Enter Your Password' className='p-2 m-2 rounded-2xl bg-white' />
 
-            <p className='text-red-600'>{errors.password?.message}</p>
+        <p className='text-red-600'>{errors.password?.message}</p>
 
 
 

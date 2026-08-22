@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import { Link } from 'react-router'
 import img from '../image/storepic.png'
-import { auth, deleteDoc, signOut, deleteUser,doc,db } from '../database/firebaseconfig'
+import { auth, deleteDoc, signOut, deleteUser,doc,db, query, where, getDocs, collection } from '../database/firebaseconfig'
 import { useNavigate } from 'react-router'
 
 const Landing = () => {
@@ -23,7 +23,12 @@ const Landing = () => {
       const user = auth.currentUser;
       if(user){
         const uid = user.uid;
-        await deleteDoc(doc(db, "credentials", uid));
+
+        const q = query (collection(db, "credentials"), where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach( async (docitem) => {
+          await deleteDoc(doc(db, "credentials", docitem.id));
+        })
         await deleteUser(user);
         console.log("User deleted successfully");
         nevigate("/");
